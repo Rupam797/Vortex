@@ -9,20 +9,57 @@ const STORAGE_KEYS = {
   THEME_MODE: 'meshchat_theme_mode',
 };
 
+// Memory fallback for Native React Native environments where window.localStorage is unavailable
+const memoryStorage = new Map<string, string>();
+
+function getItem(key: string): string | null {
+  try {
+    if (typeof localStorage !== 'undefined' && localStorage.getItem) {
+      return localStorage.getItem(key);
+    }
+  } catch (e) {
+    // Ignore error in native sandbox
+  }
+  return memoryStorage.get(key) || null;
+}
+
+function setItem(key: string, value: string): void {
+  try {
+    if (typeof localStorage !== 'undefined' && localStorage.setItem) {
+      localStorage.setItem(key, value);
+      return;
+    }
+  } catch (e) {
+    // Ignore error in native sandbox
+  }
+  memoryStorage.set(key, value);
+}
+
+function clearItems(): void {
+  try {
+    if (typeof localStorage !== 'undefined' && localStorage.clear) {
+      localStorage.clear();
+    }
+  } catch (e) {
+    // Ignore error
+  }
+  memoryStorage.clear();
+}
+
 class LocalDatabase {
   // User Profile Storage
   getUserProfile(): UserProfile | null {
-    const data = localStorage.getItem(STORAGE_KEYS.USER_PROFILE);
+    const data = getItem(STORAGE_KEYS.USER_PROFILE);
     return data ? JSON.parse(data) : null;
   }
 
   saveUserProfile(profile: UserProfile): void {
-    localStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(profile));
+    setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(profile));
   }
 
   // Contacts / Peers Storage
   getContacts(): PeerNode[] {
-    const data = localStorage.getItem(STORAGE_KEYS.CONTACTS);
+    const data = getItem(STORAGE_KEYS.CONTACTS);
     return data ? JSON.parse(data) : [];
   }
 
@@ -34,12 +71,12 @@ class LocalDatabase {
     } else {
       contacts.push(peer);
     }
-    localStorage.setItem(STORAGE_KEYS.CONTACTS, JSON.stringify(contacts));
+    setItem(STORAGE_KEYS.CONTACTS, JSON.stringify(contacts));
   }
 
   // Messages Storage
   getMessages(): ChatMessage[] {
-    const data = localStorage.getItem(STORAGE_KEYS.MESSAGES);
+    const data = getItem(STORAGE_KEYS.MESSAGES);
     return data ? JSON.parse(data) : [];
   }
 
@@ -59,7 +96,7 @@ class LocalDatabase {
       messages.push(msg);
     }
 
-    localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(messages));
+    setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(messages));
   }
 
   updateMessageStatus(packetId: string, status: ChatMessage['status'], hopCount?: number, relayedVia?: string[]): void {
@@ -69,7 +106,7 @@ class LocalDatabase {
       msg.status = status;
       if (hopCount !== undefined) msg.hopCount = hopCount;
       if (relayedVia) msg.relayedViaNodes = relayedVia;
-      localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(messages));
+      setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(messages));
     }
   }
 
@@ -103,7 +140,7 @@ class LocalDatabase {
 
   // Sliding Window Packet Deduplication Cache (Prevents Broadcast Loops)
   getDeduplicationCache(): string[] {
-    const data = localStorage.getItem(STORAGE_KEYS.DEDUP_CACHE);
+    const data = getItem(STORAGE_KEYS.DEDUP_CACHE);
     return data ? JSON.parse(data) : [];
   }
 
@@ -113,7 +150,7 @@ class LocalDatabase {
       cache.push(packetId);
       // Limit to 500 recent packets
       if (cache.length > 500) cache.shift();
-      localStorage.setItem(STORAGE_KEYS.DEDUP_CACHE, JSON.stringify(cache));
+      setItem(STORAGE_KEYS.DEDUP_CACHE, JSON.stringify(cache));
     }
   }
 
@@ -124,7 +161,7 @@ class LocalDatabase {
 
   // Network Metrics Storage
   getMetrics(): MeshMetrics {
-    const data = localStorage.getItem(STORAGE_KEYS.METRICS);
+    const data = getItem(STORAGE_KEYS.METRICS);
     return data
       ? JSON.parse(data)
       : {
@@ -141,11 +178,11 @@ class LocalDatabase {
   saveMetrics(metrics: Partial<MeshMetrics>): void {
     const current = this.getMetrics();
     const updated = { ...current, ...metrics };
-    localStorage.setItem(STORAGE_KEYS.METRICS, JSON.stringify(updated));
+    setItem(STORAGE_KEYS.METRICS, JSON.stringify(updated));
   }
 
   clearAllData(): void {
-    localStorage.clear();
+    clearItems();
   }
 }
 
