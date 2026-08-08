@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>MeshChat</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+
+	<!-- Off-Grid Bluetooth Low Energy & Multipeer Connectivity Privacy Descriptions -->
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>MeshChat requires Bluetooth access to discover nearby offline peers and relay end-to-end encrypted messages without cellular or internet connectivity.</string>
+	
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>MeshChat uses Bluetooth Low Energy to advertise your local cryptographic mesh identity to nearby offline contacts.</string>
+	
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>MeshChat uses Apple Multipeer Connectivity to establish zero-latency local Wi-Fi and Bluetooth mesh links with nearby devices.</string>
+
+	<!-- Apple Multipeer Connectivity Service Types (Bonjour) -->
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_meshchat-p2p._tcp</string>
+		<string>_meshchat-p2p._udp</string>
+	</array>
+
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+		<string>bluetooth-le</string>
+	</array>
+
+	<!-- Background Execution Modes for Bluetooth Mesh Service -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>bluetooth-central</string>
+		<string>bluetooth-peripheral</string>
+		<string>fetch</string>
+	</array>
+
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+</dict>
+</plist>

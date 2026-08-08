@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "MeshChat",
+    "slug": "meshchat",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0b141a"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.meshchat.app",
+      "infoPlist": {
+        "NSBluetoothAlwaysUsageDescription": "MeshChat requires Bluetooth access to discover nearby offline peers and relay end-to-end encrypted messages without cellular or internet connectivity.",
+        "NSBluetoothPeripheralUsageDescription": "MeshChat uses Bluetooth Low Energy to advertise your local cryptographic mesh identity to nearby offline contacts.",
+        "NSLocalNetworkUsageDescription": "MeshChat uses Apple Multipeer Connectivity to establish zero-latency local Wi-Fi and Bluetooth mesh links with nearby devices."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0b141a"
+      },
+      "package": "com.meshchat.app",
+      "permissions": [
+        "BLUETOOTH",
+        "BLUETOOTH_ADMIN",
+        "BLUETOOTH_SCAN",
+        "BLUETOOTH_ADVERTISE",
+        "BLUETOOTH_CONNECT",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "NEARBY_WIFI_DEVICES"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
