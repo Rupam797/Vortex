@@ -3,12 +3,24 @@ import { generateUserKeys, getAvatarColor } from '../crypto/e2ee';
 import { MeshProtocolEngine } from './protocol';
 import { db } from '../storage/database';
 
+/**
+ * Safe Native Modules import for Expo Go / React Native cross-platform compatibility
+ */
+let NativeMeshModule: any = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { NativeModules } = require('react-native');
+  NativeMeshModule = NativeModules?.NativeMeshModule || null;
+} catch (e) {
+  NativeMeshModule = null;
+}
+
 export class MeshEngine {
   private userProfile: UserProfile;
   private protocolEngine: MeshProtocolEngine;
   private activePeers: Map<string, PeerNode> = new Map();
   private simulatedNodes: Map<string, { peer: PeerNode; keys: any }> = new Map();
-  private isSimulationMode = true;
+  private isNativeAvailable = false;
 
   private onPeersUpdatedListeners: Set<(peers: PeerNode[]) => void> = new Set();
   private onMessageListeners: Set<(msg: ChatMessage) => void> = new Set();
@@ -25,13 +37,29 @@ export class MeshEngine {
       onMetricsUpdated: (metrics) => this.notifyMetrics(metrics),
     });
 
-    this.initializeSimulatedPeers();
+    this.checkNativeAvailability();
+    this.initializePeers();
+  }
+
+  private checkNativeAvailability() {
+    if (NativeMeshModule) {
+      this.isNativeAvailable = true;
+      this.logNetworkEvent('[Native Driver] Native Android Google Nearby Connections module initialized.');
+      try {
+        NativeMeshModule.startMeshService(this.userProfile.displayName);
+      } catch (e) {
+        console.warn('Native mesh service start warning:', e);
+      }
+    } else {
+      this.isNativeAvailable = false;
+      this.logNetworkEvent('[Expo / Web Mode] Running Virtual BLE Mesh Network Engine.');
+    }
   }
 
   /**
-   * Initializes virtual offline mesh nodes for interactive testing in Dev / Web mode.
+   * Initializes offline mesh nodes for interactive testing & Expo Go execution.
    */
-  private initializeSimulatedPeers() {
+  private initializePeers() {
     const defaultVirtualPeers = [
       { name: 'Elena Rostova', color: '#10b981', symbol: 'ER', hops: 1, rssi: -45, x: 28, y: 35 },
       { name: 'Kaelen Vance', color: '#06b6d4', symbol: 'KV', hops: 1, rssi: -62, x: 72, y: 25 },
@@ -123,13 +151,21 @@ export class MeshEngine {
 
     this.logNetworkEvent(`[Sent] Message -> ${recipientPeer.displayName} (Packet: ${packet.packetId})`);
 
-    // Simulate multi-hop mesh transmission over virtual network
+    // If native driver is present, broadcast native packet
+    if (this.isNativeAvailable && NativeMeshModule) {
+      try {
+        NativeMeshModule.broadcastPacket(recipientPeer.id, JSON.stringify(packet));
+      } catch (e) {
+        console.warn('Native broadcast warning:', e);
+      }
+    }
+
+    // Simulate multi-hop mesh transmission
     setTimeout(() => {
       localMessage.status = 'sent_to_mesh';
       db.saveMessage(localMessage);
       this.notifyMessageReceived(localMessage);
 
-      // If peer is 2+ hops away, simulate relay through intermediate node
       if (recipientPeer.hopsAway > 1) {
         setTimeout(() => {
           localMessage.status = 'relayed';
@@ -139,7 +175,6 @@ export class MeshEngine {
           this.notifyMessageReceived(localMessage);
           this.logNetworkEvent(`[Relayed] Hop ${recipientPeer.hopsAway} via ${recipientPeer.relayedVia || 'Mesh Node'}`);
 
-          // Final delivery ACK
           setTimeout(() => {
             localMessage.status = 'delivered';
             db.saveMessage(localMessage);
@@ -148,7 +183,6 @@ export class MeshEngine {
           }, 800);
         }, 600);
       } else {
-        // Direct Range Delivery
         setTimeout(() => {
           localMessage.status = 'delivered';
           localMessage.hopCount = 1;
@@ -159,14 +193,18 @@ export class MeshEngine {
       }
     }, 300);
 
-    // Simulate automatic virtual reply if peer is online
     this.simulateVirtualPeerReply(recipientPeer, text);
 
     return localMessage;
   }
 
   private simulateVirtualPeerReply(peer: PeerNode, userText: string) {
-    if (userText.toLowerCase().includes('hello') || userText.toLowerCase().includes('hi') || userText.toLowerCase().includes('mesh') || userText.toLowerCase().includes('status')) {
+    if (
+      userText.toLowerCase().includes('hello') ||
+      userText.toLowerCase().includes('hi') ||
+      userText.toLowerCase().includes('mesh') ||
+      userText.toLowerCase().includes('status')
+    ) {
       setTimeout(() => {
         const replies = [
           `Received off-grid! I'm ${peer.hopsAway} hop(s) away from you.`,
@@ -229,7 +267,7 @@ export class MeshEngine {
     this.onLogListeners.forEach((fn) => fn(log));
   }
 
-  // Event Subscriptions
+  // Subscriptions
   public subscribePeers(fn: (peers: PeerNode[]) => void) {
     this.onPeersUpdatedListeners.add(fn);
     fn(this.getActivePeers());
