@@ -8,13 +8,12 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          bg: '#43459b',
-          card: '#353782',
-          dark: '#2a2b69',
-          surface: '#3b3d8c',
-          coral: '#ff7f5d',
-          'coral-hover': '#e06847',
-          'coral-light': '#ff9e85',
+          bg: '#ffffff',
+          card: '#ff7f5d',
+          'card-hover': '#e06847',
+          indigo: '#43459b',
+          'indigo-dark': '#303273',
+          'indigo-light': '#5e60bd',
           white: '#ffffff',
         },
       },
@@ -37,8 +36,8 @@ module.exports = {
           '100%': { transform: 'rotate(360deg)' },
         },
         'pulse-glow': {
-          '0%, 100%': { boxShadow: '0 0 15px rgba(255, 127, 93, 0.5)' },
-          '50%': { boxShadow: '0 0 25px rgba(255, 127, 93, 0.85)' },
+          '0%, 100%': { boxShadow: '0 0 15px rgba(67, 69, 155, 0.4)' },
+          '50%': { boxShadow: '0 0 25px rgba(67, 69, 155, 0.75)' },
         },
       },
       borderRadius: {

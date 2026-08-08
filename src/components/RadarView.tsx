@@ -31,23 +31,23 @@ export const RadarView: React.FC<RadarViewProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-between p-4 max-w-4xl mx-auto min-h-[calc(100vh-80px)]">
+    <div className="flex flex-col items-center justify-between p-4 max-w-4xl mx-auto min-h-[calc(100vh-80px)] bg-[#ffffff]">
       
       {/* Top Bar Header */}
       <div className="w-full flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+          <h2 className="text-xl font-bold text-[#43459b] flex items-center gap-2">
             <Radio className="w-5 h-5 text-[#ff7f5d] animate-pulse" />
             Nearby Bluetooth Discovery Radar
           </h2>
-          <p className="text-xs text-[#b3b6e6]">
+          <p className="text-xs text-[#43459b]/80 font-medium">
             Real-time BLE advert & multi-hop peer topology scanner
           </p>
         </div>
 
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#ff7f5d] hover:bg-[#e06847] text-white font-bold text-xs shadow-lg shadow-[#ff7f5d]/30 transition-all"
+          className="flex items-center space-x-1.5 px-4 py-2.5 rounded-2xl bg-[#ff7f5d] hover:bg-[#e06847] text-white font-bold text-xs shadow-lg transition-all"
         >
           <UserPlus className="w-3.5 h-3.5" />
           <span>Simulate Peer Node</span>
@@ -55,30 +55,30 @@ export const RadarView: React.FC<RadarViewProps> = ({
       </div>
 
       {/* Radar Canvas / Visual Container */}
-      <div className="relative w-full max-w-lg aspect-square bg-[#353782] rounded-3xl border border-[#ff7f5d]/40 p-4 shadow-2xl flex items-center justify-center overflow-hidden whatsapp-pattern">
+      <div className="relative w-full max-w-lg aspect-square bg-[#ff7f5d] rounded-3xl border-2 border-[#43459b]/20 p-4 shadow-2xl flex items-center justify-center overflow-hidden whatsapp-pattern">
         
         {/* Concentric Signal Rings */}
-        <div className="absolute inset-4 rounded-full border border-[#ff7f5d]/30"></div>
-        <div className="absolute inset-16 rounded-full border border-[#ff7f5d]/40 border-dashed"></div>
-        <div className="absolute inset-28 rounded-full border border-[#ff7f5d]/30"></div>
-        <div className="absolute inset-40 rounded-full border border-[#ff7f5d]/50 border-dotted"></div>
+        <div className="absolute inset-4 rounded-full border border-[#43459b]/30"></div>
+        <div className="absolute inset-16 rounded-full border border-[#43459b]/40 border-dashed"></div>
+        <div className="absolute inset-28 rounded-full border border-[#43459b]/30"></div>
+        <div className="absolute inset-40 rounded-full border border-[#43459b]/50 border-dotted"></div>
 
         {/* Pulse Animations */}
-        <div className="absolute inset-20 rounded-full bg-[#ff7f5d]/10 animate-radar-pulse"></div>
+        <div className="absolute inset-20 rounded-full bg-[#43459b]/20 animate-radar-pulse"></div>
 
         {/* Radar Sweep Line */}
         <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
-          <div className="w-full h-full animate-radar-sweep bg-gradient-to-r from-transparent via-[#ff7f5d]/20 to-transparent"></div>
+          <div className="w-full h-full animate-radar-sweep bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
         </div>
 
         {/* Center Node (Local User) */}
         <div className="relative z-20 flex flex-col items-center">
-          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#ff7f5d] to-[#ff9e85] p-1 shadow-lg shadow-[#ff7f5d]/40 animate-pulse-glow flex items-center justify-center">
-            <div className="w-full h-full bg-[#43459b] rounded-full flex items-center justify-center font-bold text-white text-sm border border-white/30">
+          <div className="w-14 h-14 rounded-full bg-[#43459b] p-1 shadow-lg animate-pulse-glow flex items-center justify-center border-2 border-white">
+            <div className="w-full h-full bg-[#43459b] rounded-full flex items-center justify-center font-bold text-white text-sm">
               YOU
             </div>
           </div>
-          <span className="mt-1 text-[11px] font-bold text-white bg-[#2a2b69] px-2.5 py-0.5 rounded-full border border-[#ff7f5d]/40 shadow-sm">
+          <span className="mt-1 text-[11px] font-bold text-white bg-[#43459b] px-2.5 py-0.5 rounded-full shadow-md">
             {userProfile.displayName}
           </span>
         </div>
@@ -104,9 +104,9 @@ export const RadarView: React.FC<RadarViewProps> = ({
                 
                 {/* Node Avatar Indicator */}
                 <div
-                  style={{ backgroundColor: peer.avatarColor || '#ff7f5d' }}
+                  style={{ backgroundColor: peer.avatarColor || '#43459b' }}
                   className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-xs shadow-md border-2 transition-transform group-hover:scale-110 ${
-                    isDirect ? 'border-[#ff7f5d] shadow-[#ff7f5d]/40' : 'border-white/60 shadow-black/20'
+                    isDirect ? 'border-white shadow-white/40' : 'border-[#43459b] shadow-black/20'
                   }`}
                 >
                   {peer.avatarSymbol}
@@ -114,17 +114,17 @@ export const RadarView: React.FC<RadarViewProps> = ({
 
                 {/* Badge (Direct vs Relayed) */}
                 <span
-                  className={`mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-md shadow-md border transition-all ${
+                  className={`mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md border transition-all ${
                     isDirect
-                      ? 'bg-[#ff7f5d] text-white border-[#ff7f5d]'
-                      : 'bg-[#2a2b69] text-white border-[#ff7f5d]/40'
+                      ? 'bg-[#43459b] text-white border-white'
+                      : 'bg-white text-[#43459b] border-[#43459b]'
                   }`}
                 >
                   {isDirect ? 'Direct (1 Hop)' : `Relayed (${peer.hopsAway} Hops)`}
                 </span>
 
                 {/* Signal Strength Rings on Hover */}
-                <div className="absolute -inset-2 rounded-full border border-[#ff7f5d]/50 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="absolute -inset-2 rounded-full border border-white/60 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </div>
             </div>
           );
@@ -132,63 +132,63 @@ export const RadarView: React.FC<RadarViewProps> = ({
       </div>
 
       {/* Legend & Stats Bar */}
-      <div className="w-full mt-4 flex items-center justify-between bg-[#353782] p-3 rounded-2xl border border-[#ff7f5d]/30 text-xs">
+      <div className="w-full mt-4 flex items-center justify-between bg-[#ff7f5d] p-3.5 rounded-2xl border border-[#43459b]/20 text-xs text-white shadow-md font-semibold">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#ff7f5d] border border-white"></span>
-            <span className="text-white">Direct Range BLE (&lt; 10m)</span>
+            <span className="w-3 h-3 rounded-full bg-[#43459b] border border-white"></span>
+            <span>Direct Range BLE (&lt; 10m)</span>
           </div>
           <div className="flex items-center space-x-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#2a2b69] border border-[#ff7f5d]"></span>
-            <span className="text-white">Multi-Hop Relayed Node</span>
+            <span className="w-3 h-3 rounded-full bg-white border border-[#43459b]"></span>
+            <span>Multi-Hop Relayed Node</span>
           </div>
         </div>
 
-        <span className="text-[#b3b6e6] font-mono text-[11px]">
-          Total Mesh Peers: <strong className="text-[#ff7f5d]">{peers.length}</strong>
+        <span className="font-mono text-[11px]">
+          Total Mesh Peers: <strong className="text-white font-extrabold">{peers.length}</strong>
         </span>
       </div>
 
       {/* Selected Peer Inspector Drawer Modal */}
       {selectedPeer && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#353782] border border-[#ff7f5d]/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-[#ff7f5d] border-2 border-[#43459b] rounded-3xl p-6 max-w-sm w-full shadow-2xl relative animate-in fade-in zoom-in-95 duration-200 text-white">
             <div className="flex flex-col items-center text-center">
               <div
-                style={{ backgroundColor: selectedPeer.avatarColor || '#ff7f5d' }}
+                style={{ backgroundColor: selectedPeer.avatarColor || '#43459b' }}
                 className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-white text-xl shadow-lg border-2 border-white mb-3"
               >
                 {selectedPeer.avatarSymbol}
               </div>
               <h3 className="text-lg font-bold text-white">{selectedPeer.displayName}</h3>
-              <p className="text-xs text-[#b3b6e6] font-mono mb-4">{selectedPeer.fingerprint}</p>
+              <p className="text-xs text-white/90 font-mono mb-4">{selectedPeer.fingerprint}</p>
 
               {/* Hop & Connection Info */}
-              <div className="w-full bg-[#2a2b69] rounded-2xl p-3 border border-[#ff7f5d]/30 space-y-2 text-xs text-left mb-5">
+              <div className="w-full bg-[#43459b] rounded-2xl p-3 border border-white/20 space-y-2 text-xs text-left mb-5">
                 <div className="flex justify-between">
-                  <span className="text-[#b3b6e6]">Connection Mode:</span>
-                  <span className="font-bold text-[#ff7f5d]">
+                  <span className="text-white/80">Connection Mode:</span>
+                  <span className="font-bold text-white">
                     {selectedPeer.hopsAway === 1 ? 'Direct Bluetooth BLE' : 'Multi-Hop Relay Mesh'}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#b3b6e6]">Hop Distance:</span>
+                  <span className="text-white/80">Hop Distance:</span>
                   <span className="font-bold text-white">{selectedPeer.hopsAway} Hops</span>
                 </div>
                 {selectedPeer.relayedVia && (
                   <div className="flex justify-between">
-                    <span className="text-[#b3b6e6]">Relayed Via Node:</span>
-                    <span className="font-bold text-[#ff9e85]">{selectedPeer.relayedVia}</span>
+                    <span className="text-white/80">Relayed Via Node:</span>
+                    <span className="font-bold text-[#ff7f5d] bg-white px-1.5 rounded">{selectedPeer.relayedVia}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span className="text-[#b3b6e6]">Signal RSSI:</span>
+                  <span className="text-white/80">Signal RSSI:</span>
                   <span className="font-bold text-white">{selectedPeer.rssi} dBm</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#b3b6e6]">Security Verification:</span>
-                  <span className="font-bold text-[#ff7f5d] flex items-center gap-1">
-                    <ShieldCheck className="w-3.5 h-3.5 text-[#ff7f5d]" />
+                  <span className="text-white/80">Security Verification:</span>
+                  <span className="font-bold text-white flex items-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-white" />
                     {selectedPeer.isVerified ? 'Verified E2EE Key' : 'Unverified Peer'}
                   </span>
                 </div>
@@ -196,7 +196,7 @@ export const RadarView: React.FC<RadarViewProps> = ({
 
               {/* Interactive Hop Distance Tester Controls */}
               <div className="w-full mb-5 text-left">
-                <label className="text-[11px] font-medium text-[#b3b6e6] mb-1 block">
+                <label className="text-[11px] font-bold text-white mb-1 block">
                   Simulate Distance / Hop Relaying:
                 </label>
                 <div className="grid grid-cols-3 gap-2">
@@ -205,10 +205,10 @@ export const RadarView: React.FC<RadarViewProps> = ({
                       onUpdatePeerPosition(selectedPeer.fingerprint, 30, 30, 1);
                       setSelectedPeer({ ...selectedPeer, hopsAway: 1, rssi: -48 });
                     }}
-                    className={`py-1.5 rounded-xl text-xs font-semibold border transition-all ${
+                    className={`py-1.5 rounded-xl text-xs font-bold border transition-all ${
                       selectedPeer.hopsAway === 1
-                        ? 'bg-[#ff7f5d] text-white border-[#ff7f5d]'
-                        : 'bg-[#2a2b69] text-white border-[#ff7f5d]/30'
+                        ? 'bg-[#43459b] text-white border-white'
+                        : 'bg-white text-[#43459b] border-[#43459b]'
                     }`}
                   >
                     1 Hop (Direct)
@@ -218,10 +218,10 @@ export const RadarView: React.FC<RadarViewProps> = ({
                       onUpdatePeerPosition(selectedPeer.fingerprint, 80, 25, 2);
                       setSelectedPeer({ ...selectedPeer, hopsAway: 2, rssi: -82, relayedVia: 'Kaelen Vance' });
                     }}
-                    className={`py-1.5 rounded-xl text-xs font-semibold border transition-all ${
+                    className={`py-1.5 rounded-xl text-xs font-bold border transition-all ${
                       selectedPeer.hopsAway === 2
-                        ? 'bg-[#ff7f5d] text-white border-[#ff7f5d]'
-                        : 'bg-[#2a2b69] text-white border-[#ff7f5d]/30'
+                        ? 'bg-[#43459b] text-white border-white'
+                        : 'bg-white text-[#43459b] border-[#43459b]'
                     }`}
                   >
                     2 Hops
@@ -231,10 +231,10 @@ export const RadarView: React.FC<RadarViewProps> = ({
                       onUpdatePeerPosition(selectedPeer.fingerprint, 15, 80, 3);
                       setSelectedPeer({ ...selectedPeer, hopsAway: 3, rssi: -94, relayedVia: 'Elena Rostova' });
                     }}
-                    className={`py-1.5 rounded-xl text-xs font-semibold border transition-all ${
+                    className={`py-1.5 rounded-xl text-xs font-bold border transition-all ${
                       selectedPeer.hopsAway === 3
-                        ? 'bg-[#ff7f5d] text-white border-[#ff7f5d]'
-                        : 'bg-[#2a2b69] text-white border-[#ff7f5d]/30'
+                        ? 'bg-[#43459b] text-white border-white'
+                        : 'bg-white text-[#43459b] border-[#43459b]'
                     }`}
                   >
                     3 Hops
@@ -246,7 +246,7 @@ export const RadarView: React.FC<RadarViewProps> = ({
               <div className="flex space-x-3 w-full">
                 <button
                   onClick={() => setSelectedPeer(null)}
-                  className="flex-1 py-2.5 rounded-xl bg-[#2a2b69] text-white font-medium text-xs hover:bg-[#ff7f5d]/20 transition-all border border-[#ff7f5d]/30"
+                  className="flex-1 py-2.5 rounded-xl bg-white text-[#43459b] font-bold text-xs hover:bg-white/90 transition-all"
                 >
                   Close
                 </button>
@@ -255,7 +255,7 @@ export const RadarView: React.FC<RadarViewProps> = ({
                     onSelectPeer(selectedPeer);
                     setSelectedPeer(null);
                   }}
-                  className="flex-1 py-2.5 rounded-xl bg-[#ff7f5d] hover:bg-[#e06847] text-white font-bold text-xs shadow-lg shadow-[#ff7f5d]/40 transition-all flex items-center justify-center gap-1.5"
+                  className="flex-1 py-2.5 rounded-xl bg-[#43459b] hover:bg-[#303273] text-white font-bold text-xs shadow-lg transition-all flex items-center justify-center gap-1.5"
                 >
                   <Zap className="w-4 h-4" />
                   Open Encrypted Chat
@@ -269,9 +269,9 @@ export const RadarView: React.FC<RadarViewProps> = ({
       {/* Add Virtual Peer Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#353782] border border-[#ff7f5d]/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
+          <div className="bg-[#ff7f5d] border-2 border-[#43459b] rounded-3xl p-6 max-w-sm w-full shadow-2xl text-white">
             <h3 className="text-lg font-bold text-white mb-2">Simulate Bluetooth Mesh Node</h3>
-            <p className="text-xs text-[#b3b6e6] mb-4">
+            <p className="text-xs text-white/90 mb-4 font-medium">
               Add a new virtual offline device node to test P2P mesh relaying.
             </p>
 
@@ -281,7 +281,7 @@ export const RadarView: React.FC<RadarViewProps> = ({
                 value={newPeerName}
                 onChange={(e) => setNewPeerName(e.target.value)}
                 placeholder="Enter Peer Display Name (e.g. Sarah Connor)"
-                className="w-full bg-[#2a2b69] border border-[#ff7f5d]/30 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#ff7f5d] mb-5 placeholder-[#b3b6e6]/60"
+                className="w-full bg-[#ffffff] border border-[#43459b] rounded-xl px-4 py-2.5 text-sm text-[#43459b] focus:outline-none mb-5 placeholder-[#43459b]/60 font-semibold"
                 autoFocus
               />
 
@@ -289,13 +289,13 @@ export const RadarView: React.FC<RadarViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 py-2.5 rounded-xl bg-[#2a2b69] text-white font-medium text-xs hover:bg-[#ff7f5d]/20 border border-[#ff7f5d]/30"
+                  className="flex-1 py-2.5 rounded-xl bg-white text-[#43459b] font-bold text-xs hover:bg-white/90"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 rounded-xl bg-[#ff7f5d] hover:bg-[#e06847] text-white font-bold text-xs shadow-lg"
+                  className="flex-1 py-2.5 rounded-xl bg-[#43459b] hover:bg-[#303273] text-white font-bold text-xs shadow-lg"
                 >
                   Add to Mesh
                 </button>

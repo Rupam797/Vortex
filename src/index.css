@@ -4,20 +4,19 @@
 
 @layer base {
   :root {
-    --color-bg-main: #43459b;
-    --color-bg-card: #353782;
-    --color-bg-chat: #43459b;
-    --color-bg-input: #2a2b69;
-    --color-coral-primary: #ff7f5d;
-    --color-coral-hover: #e06847;
-    --color-coral-light: #ff9e85;
+    --color-bg-main: #ffffff;
+    --color-bg-card: #ff7f5d;
+    --color-bg-chat: #ffffff;
+    --color-bg-input: #ffffff;
+    --color-indigo-primary: #43459b;
+    --color-indigo-hover: #303273;
     --color-bubble-out: #ff7f5d;
-    --color-bubble-in: #353782;
+    --color-bubble-in: #f1f2fc;
   }
 
   body {
     background-color: var(--color-bg-main);
-    color: #ffffff;
+    color: #43459b;
     font-family: 'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
@@ -50,10 +49,10 @@
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 15px rgba(255, 127, 93, 0.4);
+    box-shadow: 0 0 15px rgba(67, 69, 155, 0.4);
   }
   50% {
-    box-shadow: 0 0 25px rgba(255, 127, 93, 0.85);
+    box-shadow: 0 0 25px rgba(67, 69, 155, 0.75);
   }
 }
 
@@ -72,17 +71,17 @@
 
 /* Glassmorphism Cards */
 .glass-panel {
-  background: rgba(53, 55, 130, 0.85);
+  background: rgba(255, 127, 93, 0.95);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 127, 93, 0.2);
+  border: 1px solid rgba(67, 69, 155, 0.15);
 }
 
 .glass-modal {
-  background: rgba(42, 43, 105, 0.95);
+  background: #ffffff;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 127, 93, 0.3);
+  border: 2px solid #ff7f5d;
 }
 
 /* Custom Scrollbar */
@@ -101,11 +100,11 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #ff9e85;
+  background: #43459b;
 }
 
-/* Mesh Pattern Overlay */
+/* Pattern Overlay */
 .whatsapp-pattern {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(67, 69, 155, 0.08) 1px, transparent 1px);
   background-size: 20px 20px;
 }

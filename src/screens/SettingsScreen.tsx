@@ -17,12 +17,12 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   onResetApp,
 }) => {
   return (
-    <div className="max-w-2xl mx-auto p-4 space-y-6 min-h-[calc(100vh-80px)]">
+    <div className="max-w-2xl mx-auto p-4 space-y-6 min-h-[calc(100vh-80px)] bg-[#ffffff]">
       
       {/* User Identity Profile Card */}
-      <div className="bg-[#353782] p-6 rounded-3xl border border-[#ff7f5d]/40 shadow-xl flex items-center space-x-4">
+      <div className="bg-[#ff7f5d] p-6 rounded-3xl border border-[#43459b]/20 shadow-xl flex items-center space-x-4 text-white">
         <div
-          style={{ backgroundColor: userProfile.avatarColor || '#ff7f5d' }}
+          style={{ backgroundColor: userProfile.avatarColor || '#43459b' }}
           className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-white text-2xl shadow-lg border-2 border-white flex-shrink-0"
         >
           {userProfile.avatarSymbol}
@@ -30,80 +30,80 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
         <div className="min-w-0 flex-1">
           <h2 className="text-lg font-bold text-white truncate">{userProfile.displayName}</h2>
-          <p className="text-xs text-[#ff7f5d] font-mono flex items-center gap-1 mt-0.5">
+          <p className="text-xs text-white font-mono flex items-center gap-1 mt-0.5 font-bold">
             <ShieldCheck className="w-3.5 h-3.5" />
             Fingerprint: {userProfile.keys.fingerprint}
           </p>
-          <span className="inline-block mt-2 text-[10px] px-2 py-0.5 bg-[#2a2b69] text-white rounded-full border border-[#ff7f5d]/30 font-semibold">
+          <span className="inline-block mt-2 text-[10px] px-2 py-0.5 bg-[#43459b] text-white rounded-full font-bold">
             0 Internet • Local Device Cryptographic Identity
           </span>
         </div>
       </div>
 
       {/* Security & Cryptography Box */}
-      <div className="bg-[#353782] p-5 rounded-3xl border border-[#ff7f5d]/30 space-y-3">
+      <div className="bg-[#ff7f5d] p-5 rounded-3xl border border-[#43459b]/20 space-y-3 text-white shadow-md">
         <h3 className="text-sm font-bold text-white flex items-center gap-2">
-          <Key className="w-4 h-4 text-[#ff7f5d]" />
+          <Key className="w-4 h-4 text-white" />
           TweetNaCl Asymmetric Cryptography Specifications
         </h3>
 
-        <div className="bg-[#2a2b69] p-3 rounded-2xl border border-[#ff7f5d]/20 space-y-2 text-xs font-mono">
+        <div className="bg-[#43459b] p-3 rounded-2xl border border-white/20 space-y-2 text-xs font-mono text-white">
           <div className="flex justify-between">
-            <span className="text-[#b3b6e6]">Curve25519 Box Encryption PubKey:</span>
-            <span className="text-white truncate max-w-[200px]">
+            <span className="text-white/80">Curve25519 Box Encryption PubKey:</span>
+            <span className="text-white font-bold truncate max-w-[200px]">
               {userProfile.keys.boxPublicKey.slice(0, 16)}...
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-[#b3b6e6]">Ed25519 Signing Identity PubKey:</span>
-            <span className="text-white truncate max-w-[200px]">
+            <span className="text-white/80">Ed25519 Signing Identity PubKey:</span>
+            <span className="text-white font-bold truncate max-w-[200px]">
               {userProfile.keys.signPublicKey.slice(0, 16)}...
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-[#b3b6e6]">Intermediate Relay Decryption:</span>
-            <span className="text-[#ff7f5d] font-bold">Impossible (E2EE Protected)</span>
+            <span className="text-white/80">Intermediate Relay Decryption:</span>
+            <span className="text-[#ff7f5d] font-extrabold bg-white px-2 py-0.5 rounded">Impossible (E2EE Protected)</span>
           </div>
         </div>
       </div>
 
       {/* Tools & Utilities */}
-      <div className="bg-[#353782] p-5 rounded-3xl border border-[#ff7f5d]/30 space-y-3">
+      <div className="bg-[#ff7f5d] p-5 rounded-3xl border border-[#43459b]/20 space-y-3 text-white shadow-md">
         <h3 className="text-sm font-bold text-white">Security & Mesh Tools</h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <button
             onClick={onOpenQR}
-            className="flex items-center space-x-3 p-3.5 rounded-2xl bg-[#2a2b69] hover:bg-[#ff7f5d]/20 border border-[#ff7f5d]/30 text-left transition-all"
+            className="flex items-center space-x-3 p-3.5 rounded-2xl bg-[#43459b] hover:bg-[#303273] text-left transition-all text-white shadow-sm"
           >
-            <div className="p-2 rounded-xl bg-[#ff7f5d]/20 text-[#ff7f5d]">
+            <div className="p-2 rounded-xl bg-white text-[#ff7f5d]">
               <QrCode className="w-5 h-5" />
             </div>
             <div>
               <strong className="block text-xs text-white">QR Code Key Pairing</strong>
-              <span className="text-[10px] text-[#b3b6e6]">In-person public key exchange</span>
+              <span className="text-[10px] text-white/80">In-person public key exchange</span>
             </div>
           </button>
 
           <button
             onClick={onOpenDiagnostics}
-            className="flex items-center space-x-3 p-3.5 rounded-2xl bg-[#2a2b69] hover:bg-[#ff7f5d]/20 border border-[#ff7f5d]/30 text-left transition-all"
+            className="flex items-center space-x-3 p-3.5 rounded-2xl bg-[#43459b] hover:bg-[#303273] text-left transition-all text-white shadow-sm"
           >
-            <div className="p-2 rounded-xl bg-[#ff7f5d]/20 text-white">
+            <div className="p-2 rounded-xl bg-white text-[#ff7f5d]">
               <Activity className="w-5 h-5 text-[#ff7f5d]" />
             </div>
             <div>
               <strong className="block text-xs text-white">Off-Grid Mesh Diagnostics</strong>
-              <span className="text-[10px] text-[#b3b6e6]">Topology & hop metrics</span>
+              <span className="text-[10px] text-white/80">Topology & hop metrics</span>
             </div>
           </button>
         </div>
       </div>
 
       {/* Reset Storage */}
-      <div className="bg-[#353782] p-5 rounded-3xl border border-red-500/40 space-y-3">
-        <h3 className="text-sm font-bold text-red-300">Danger Zone</h3>
-        <p className="text-xs text-[#b3b6e6]">
+      <div className="bg-[#ff7f5d] p-5 rounded-3xl border border-[#43459b]/20 space-y-3 text-white shadow-md">
+        <h3 className="text-sm font-bold text-white">Danger Zone</h3>
+        <p className="text-xs text-white/90 font-medium">
           Wipe local device storage, contacts, local cryptographic keys, and offline message history.
         </p>
         <button
@@ -113,9 +113,9 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               onResetApp();
             }
           }}
-          className="flex items-center justify-center space-x-2 w-full py-3 rounded-2xl bg-red-950/80 hover:bg-red-900 text-white border border-red-500/50 text-xs font-bold transition-all"
+          className="flex items-center justify-center space-x-2 w-full py-3 rounded-2xl bg-[#43459b] hover:bg-[#303273] text-white text-xs font-bold transition-all shadow-md"
         >
-          <Trash2 className="w-4 h-4 text-red-400" />
+          <Trash2 className="w-4 h-4 text-white" />
           <span>Purge Local Cryptographic Vault</span>
         </button>
       </div>

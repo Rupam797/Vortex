@@ -91,7 +91,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#43459b] text-white flex flex-col font-outfit">
+    <div className="min-h-screen bg-[#ffffff] text-[#43459b] flex flex-col font-outfit">
       
       {/* Top Navbar Header */}
       <Navbar
