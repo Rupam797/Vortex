@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { QRCodeSVG } from 'qrcode.react';
 import { QrCode, ShieldCheck, Copy, Check, X, Camera } from 'lucide-react';
 import { UserProfile } from '../types/mesh';
+import { generateQRMatrix } from '../crypto/qrGenerator';
 
 interface QRCodeModalProps {
   userProfile: UserProfile;
@@ -20,8 +20,12 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ userProfile, onClose }
     signPubKey: userProfile.keys.signPublicKey,
   });
 
+  const matrix = generateQRMatrix(qrData);
+
   const handleCopy = () => {
-    navigator.clipboard.writeText(userProfile.keys.fingerprint);
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(userProfile.keys.fingerprint);
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -77,9 +81,18 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ userProfile, onClose }
 
           {activeMode === 'my_qr' ? (
             <div className="flex flex-col items-center">
-              {/* QR Container */}
-              <div className="p-4 bg-white rounded-2xl shadow-xl mb-4 border-4 border-emerald-500/40">
-                <QRCodeSVG value={qrData} size={180} level="H" includeMargin={true} />
+              {/* Custom Vector QR Matrix Container */}
+              <div className="p-3 bg-white rounded-2xl shadow-xl mb-4 border-4 border-emerald-500/40 inline-block">
+                <div className="grid grid-cols-25 gap-0.5 w-44 h-44 bg-white p-1">
+                  {matrix.map((row, r) =>
+                    row.map((cell, c) => (
+                      <div
+                        key={`${r}-${c}`}
+                        className={`w-full h-full ${cell ? 'bg-black' : 'bg-white'}`}
+                      />
+                    ))
+                  )}
+                </div>
               </div>
 
               <div className="w-full bg-[#0b141a] rounded-xl p-3 border border-slate-800 text-left mb-4">
