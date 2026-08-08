@@ -6,6 +6,18 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        brand: {
+          bg: '#43459b',
+          card: '#353782',
+          dark: '#2a2b69',
+          surface: '#3b3d8c',
+          coral: '#ff7f5d',
+          'coral-hover': '#e06847',
+          'coral-light': '#ff9e85',
+          white: '#ffffff',
+        },
+      },
       fontFamily: {
         outfit: ['Outfit', 'Plus Jakarta Sans', '-apple-system', 'sans-serif'],
       },
@@ -25,8 +37,8 @@ module.exports = {
           '100%': { transform: 'rotate(360deg)' },
         },
         'pulse-glow': {
-          '0%, 100%': { boxShadow: '0 0 15px rgba(16, 185, 129, 0.4)' },
-          '50%': { boxShadow: '0 0 25px rgba(16, 185, 129, 0.8)' },
+          '0%, 100%': { boxShadow: '0 0 15px rgba(255, 127, 93, 0.5)' },
+          '50%': { boxShadow: '0 0 25px rgba(255, 127, 93, 0.85)' },
         },
       },
       borderRadius: {

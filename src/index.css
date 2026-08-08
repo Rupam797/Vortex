@@ -4,20 +4,20 @@
 
 @layer base {
   :root {
-    --color-bg-main: #0b141a;
-    --color-bg-card: #111b21;
-    --color-bg-chat: #0b141a;
-    --color-bg-input: #202c33;
-    --color-emerald-primary: #10b981;
-    --color-emerald-hover: #059669;
-    --color-mint-accent: #34d399;
-    --color-bubble-out: #005c4b;
-    --color-bubble-in: #202c33;
+    --color-bg-main: #43459b;
+    --color-bg-card: #353782;
+    --color-bg-chat: #43459b;
+    --color-bg-input: #2a2b69;
+    --color-coral-primary: #ff7f5d;
+    --color-coral-hover: #e06847;
+    --color-coral-light: #ff9e85;
+    --color-bubble-out: #ff7f5d;
+    --color-bubble-in: #353782;
   }
 
   body {
     background-color: var(--color-bg-main);
-    color: #e9edef;
+    color: #ffffff;
     font-family: 'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
@@ -50,10 +50,10 @@
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 0 15px rgba(255, 127, 93, 0.4);
   }
   50% {
-    box-shadow: 0 0 25px rgba(16, 185, 129, 0.8);
+    box-shadow: 0 0 25px rgba(255, 127, 93, 0.85);
   }
 }
 
@@ -72,17 +72,17 @@
 
 /* Glassmorphism Cards */
 .glass-panel {
-  background: rgba(17, 27, 33, 0.85);
+  background: rgba(53, 55, 130, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 127, 93, 0.2);
 }
 
 .glass-modal {
-  background: rgba(11, 20, 26, 0.92);
+  background: rgba(42, 43, 105, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(255, 127, 93, 0.3);
 }
 
 /* Custom Scrollbar */
@@ -96,16 +96,16 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2a3942;
+  background: #ff7f5d;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #374248;
+  background: #ff9e85;
 }
 
-/* WhatsApp Pattern Overlay */
+/* Mesh Pattern Overlay */
 .whatsapp-pattern {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
   background-size: 20px 20px;
 }

@@ -9,6 +9,8 @@ node_modules/
 # Production build
 dist/
 build/
+*.apk
+MeshChat.apk
 
 # Local environment variables
 .env

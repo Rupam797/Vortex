@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Radio, MessageSquare, ShieldCheck, CheckCheck, UserPlus, Clock } from 'lucide-react';
+import { Search, Radio, MessageSquare, CheckCheck } from 'lucide-react';
 import { ChatThread, PeerNode, UserProfile } from '../types/mesh';
 
 interface ChatListScreenProps {
@@ -30,20 +30,20 @@ export const ChatListScreen: React.FC<ChatListScreenProps> = ({
       {/* Search & Top Action */}
       <div className="flex items-center space-x-3">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+          <Search className="w-4 h-4 absolute left-3.5 top-3 text-[#b3b6e6]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search contacts, key fingerprints..."
-            className="w-full bg-[#111b21] border border-slate-700/50 rounded-2xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-all"
+            className="w-full bg-[#2a2b69] border border-[#ff7f5d]/30 rounded-2xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-[#b3b6e6]/60 focus:outline-none focus:border-[#ff7f5d] transition-all"
           />
         </div>
         <button
           onClick={onOpenRadar}
-          className="flex items-center space-x-1.5 px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs shadow-lg shadow-emerald-950/40 transition-all flex-shrink-0"
+          className="flex items-center space-x-1.5 px-4 py-2.5 rounded-2xl bg-[#ff7f5d] hover:bg-[#e06847] text-white font-bold text-xs shadow-lg shadow-[#ff7f5d]/30 transition-all flex-shrink-0"
         >
-          <Radio className="w-4 h-4 animate-pulse" />
+          <Radio className="w-4 h-4 animate-pulse text-white" />
           <span>BLE Radar</span>
         </button>
       </div>
@@ -51,17 +51,17 @@ export const ChatListScreen: React.FC<ChatListScreenProps> = ({
       {/* Threads List */}
       <div className="flex-1 space-y-2">
         {filteredThreads.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center bg-[#111b21]/60 rounded-3xl border border-slate-800 p-6">
-            <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-3">
+          <div className="flex flex-col items-center justify-center py-16 text-center bg-[#353782]/80 rounded-3xl border border-[#ff7f5d]/30 p-6">
+            <div className="w-14 h-14 rounded-2xl bg-[#ff7f5d]/20 border border-[#ff7f5d]/40 flex items-center justify-center text-[#ff7f5d] mb-3">
               <MessageSquare className="w-7 h-7" />
             </div>
-            <h3 className="text-base font-bold text-slate-200">No Mesh Chats Yet</h3>
-            <p className="text-xs text-slate-400 max-w-xs mt-1 mb-4">
+            <h3 className="text-base font-bold text-white">No Mesh Chats Yet</h3>
+            <p className="text-xs text-[#b3b6e6] max-w-xs mt-1 mb-4">
               Connect to nearby Bluetooth mesh peers or open the radar to discover nearby devices.
             </p>
             <button
               onClick={onOpenRadar}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md"
+              className="px-4 py-2 rounded-xl bg-[#ff7f5d] hover:bg-[#e06847] text-white text-xs font-bold shadow-md"
             >
               Scan Nearby Bluetooth Peers
             </button>
@@ -75,24 +75,24 @@ export const ChatListScreen: React.FC<ChatListScreenProps> = ({
               <div
                 key={thread.contactId}
                 onClick={() => onSelectThread(peer)}
-                className="flex items-center justify-between p-3.5 rounded-2xl bg-[#111b21] hover:bg-[#1a252c] border border-slate-800/80 hover:border-emerald-500/40 cursor-pointer transition-all shadow-sm group"
+                className="flex items-center justify-between p-3.5 rounded-2xl bg-[#353782] hover:bg-[#2a2b69] border border-[#ff7f5d]/20 hover:border-[#ff7f5d]/60 cursor-pointer transition-all shadow-md group"
               >
-                <div className="flex items-center space-x-3 min-w-0">
+                <div className="flex items-center space-x-3 min-w-0 w-full">
                   
                   {/* Peer Avatar with Online / Hop Badge */}
                   <div className="relative flex-shrink-0">
                     <div
-                      style={{ backgroundColor: peer.avatarColor }}
-                      className="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white text-sm shadow-md"
+                      style={{ backgroundColor: peer.avatarColor || '#ff7f5d' }}
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white text-sm shadow-md border border-white/20"
                     >
                       {peer.avatarSymbol}
                     </div>
                     {/* Hop Distance Badge */}
                     <span
-                      className={`absolute -bottom-1 -right-1 px-1.5 py-0.2 rounded-full text-[9px] font-bold border border-[#111b21] ${
+                      className={`absolute -bottom-1 -right-1 px-1.5 py-0.2 rounded-full text-[9px] font-bold border border-[#353782] ${
                         peer.hopsAway === 1
-                          ? 'bg-emerald-500 text-black'
-                          : 'bg-teal-400 text-black'
+                          ? 'bg-[#ff7f5d] text-white'
+                          : 'bg-[#ff9e85] text-[#43459b]'
                       }`}
                       title={`${peer.hopsAway} Hop(s) Away`}
                     >
@@ -103,11 +103,11 @@ export const ChatListScreen: React.FC<ChatListScreenProps> = ({
                   {/* Thread Details */}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-bold text-sm text-slate-100 truncate group-hover:text-emerald-300 transition-colors">
+                      <h4 className="font-bold text-sm text-white truncate group-hover:text-[#ff9e85] transition-colors">
                         {peer.displayName}
                       </h4>
                       {lastMsg && (
-                        <span className="text-[11px] text-slate-400 font-mono flex-shrink-0">
+                        <span className="text-[11px] text-[#b3b6e6] font-mono flex-shrink-0">
                           {new Date(lastMsg.timestamp).toLocaleTimeString([], {
                             hour: '2-digit',
                             minute: '2-digit',
@@ -117,14 +117,14 @@ export const ChatListScreen: React.FC<ChatListScreenProps> = ({
                     </div>
 
                     <div className="flex items-center justify-between mt-1">
-                      <p className="text-xs text-slate-400 truncate pr-2 flex items-center gap-1">
+                      <p className="text-xs text-[#b3b6e6] truncate pr-2 flex items-center gap-1">
                         {lastMsg ? (
                           <>
-                            {lastMsg.isOutgoing && <CheckCheck className="w-3.5 h-3.5 text-emerald-400 inline" />}
-                            <span>{lastMsg.text}</span>
+                            {lastMsg.isOutgoing && <CheckCheck className="w-3.5 h-3.5 text-[#ff7f5d] inline" />}
+                            <span className="text-white/90">{lastMsg.text}</span>
                           </>
                         ) : (
-                          <span className="text-emerald-400/80 font-mono text-[11px]">
+                          <span className="text-[#ff9e85] font-mono text-[11px]">
                             E2EE Verified • {peer.fingerprint}
                           </span>
                         )}
@@ -132,7 +132,7 @@ export const ChatListScreen: React.FC<ChatListScreenProps> = ({
 
                       {/* Unread Badge */}
                       {thread.unreadCount > 0 && (
-                        <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-black text-[10px] font-extrabold shadow-sm flex-shrink-0">
+                        <span className="px-2 py-0.5 rounded-full bg-[#ff7f5d] text-white text-[10px] font-extrabold shadow-sm flex-shrink-0">
                           {thread.unreadCount}
                         </span>
                       )}
