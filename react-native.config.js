@@ -1,4 +1,4 @@
-module = {
+export default {
   project: {
     android: {
       sourceDir: './android',
