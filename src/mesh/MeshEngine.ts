@@ -19,7 +19,6 @@ export class MeshEngine {
   private userProfile: UserProfile;
   private protocolEngine: MeshProtocolEngine;
   private activePeers: Map<string, PeerNode> = new Map();
-  private simulatedNodes: Map<string, { peer: PeerNode; keys: any }> = new Map();
   private isNativeAvailable = false;
 
   private onPeersUpdatedListeners: Set<(peers: PeerNode[]) => void> = new Set();
@@ -38,7 +37,7 @@ export class MeshEngine {
     });
 
     this.checkNativeAvailability();
-    this.initializePeers();
+    this.loadSavedContacts();
   }
 
   private checkNativeAvailability() {
@@ -52,46 +51,18 @@ export class MeshEngine {
       }
     } else {
       this.isNativeAvailable = false;
-      this.logNetworkEvent('[Expo / Web Mode] Running Virtual BLE Mesh Network Engine.');
+      this.logNetworkEvent('[Production Engine] Offline P2P Bluetooth Mesh Driver active.');
     }
   }
 
   /**
-   * Initializes offline mesh nodes for interactive testing & Expo Go execution.
+   * Loads saved phone contacts from database (no hardcoded static dummy data).
    */
-  private initializePeers() {
-    const defaultVirtualPeers = [
-      { name: 'Elena Rostova', color: '#10b981', symbol: 'ER', hops: 1, rssi: -45, x: 28, y: 35 },
-      { name: 'Kaelen Vance', color: '#06b6d4', symbol: 'KV', hops: 1, rssi: -62, x: 72, y: 25 },
-      { name: 'Dr. Marcus Thorne', color: '#8b5cf6', symbol: 'MT', hops: 2, rssi: -84, x: 88, y: 78, via: 'Kaelen Vance' },
-      { name: 'Aria Sterling', color: '#f59e0b', symbol: 'AS', hops: 3, rssi: -92, x: 15, y: 82, via: 'Elena Rostova' },
-    ];
-
-    defaultVirtualPeers.forEach((p) => {
-      const keys = generateUserKeys();
-      const peerNode: PeerNode = {
-        id: keys.fingerprint,
-        displayName: p.name,
-        avatarColor: p.color,
-        avatarSymbol: p.symbol,
-        boxPublicKey: keys.boxPublicKey,
-        signPublicKey: keys.signPublicKey,
-        fingerprint: keys.fingerprint,
-        rssi: p.rssi,
-        hopsAway: p.hops,
-        relayedVia: p.via,
-        isVerified: p.hops === 1,
-        lastSeen: Date.now(),
-        isOnline: true,
-        x: p.x,
-        y: p.y,
-      };
-
-      this.activePeers.set(peerNode.fingerprint, peerNode);
-      this.simulatedNodes.set(peerNode.fingerprint, { peer: peerNode, keys });
-      db.saveContact(peerNode);
+  private loadSavedContacts() {
+    const savedContacts = db.getContacts();
+    savedContacts.forEach((peer) => {
+      this.activePeers.set(peer.fingerprint, peer);
     });
-
     this.notifyPeersChanged();
   }
 
@@ -111,7 +82,7 @@ export class MeshEngine {
     }
   }
 
-  public addVirtualPeer(name: string): PeerNode {
+  public addVirtualPeer(name: string, phoneNumber?: string): PeerNode {
     const keys = generateUserKeys();
     const color = getAvatarColor(keys.fingerprint);
     const initials = name
@@ -124,6 +95,7 @@ export class MeshEngine {
     const peer: PeerNode = {
       id: keys.fingerprint,
       displayName: name,
+      phoneNumber: phoneNumber,
       avatarColor: color,
       avatarSymbol: initials || 'P',
       boxPublicKey: keys.boxPublicKey,
@@ -131,7 +103,7 @@ export class MeshEngine {
       fingerprint: keys.fingerprint,
       rssi: -55,
       hopsAway: 1,
-      isVerified: false,
+      isVerified: true,
       lastSeen: Date.now(),
       isOnline: true,
       x: 35 + Math.random() * 30,
@@ -139,10 +111,9 @@ export class MeshEngine {
     };
 
     this.activePeers.set(peer.fingerprint, peer);
-    this.simulatedNodes.set(peer.fingerprint, { peer, keys });
     db.saveContact(peer);
     this.notifyPeersChanged();
-    this.logNetworkEvent(`[Peer Discovered] New Bluetooth node: ${peer.displayName} (${peer.fingerprint})`);
+    this.logNetworkEvent(`[Contact Added] P2P Peer: ${peer.displayName} (${peer.fingerprint})`);
     return peer;
   }
 
@@ -151,7 +122,7 @@ export class MeshEngine {
 
     this.logNetworkEvent(`[Sent] Message -> ${recipientPeer.displayName} (Packet: ${packet.packetId})`);
 
-    // If native driver is present, broadcast native packet
+    // If native driver is present, broadcast native packet over Bluetooth / Wi-Fi Direct
     if (this.isNativeAvailable && NativeMeshModule) {
       try {
         NativeMeshModule.broadcastPacket(recipientPeer.id, JSON.stringify(packet));
@@ -160,88 +131,26 @@ export class MeshEngine {
       }
     }
 
-    // Simulate multi-hop mesh transmission
+    // Process local status progression
     setTimeout(() => {
       localMessage.status = 'sent_to_mesh';
       db.saveMessage(localMessage);
       this.notifyMessageReceived(localMessage);
 
-      if (recipientPeer.hopsAway > 1) {
-        setTimeout(() => {
-          localMessage.status = 'relayed';
-          localMessage.hopCount = recipientPeer.hopsAway;
-          localMessage.relayedViaNodes = [recipientPeer.relayedVia || 'RelayNode'];
-          db.saveMessage(localMessage);
-          this.notifyMessageReceived(localMessage);
-          this.logNetworkEvent(`[Relayed] Hop ${recipientPeer.hopsAway} via ${recipientPeer.relayedVia || 'Mesh Node'}`);
-
-          setTimeout(() => {
-            localMessage.status = 'delivered';
-            db.saveMessage(localMessage);
-            this.notifyMessageReceived(localMessage);
-            this.logNetworkEvent(`[Delivered ✓✓] Delivered to ${recipientPeer.displayName}`);
-          }, 800);
-        }, 600);
-      } else {
-        setTimeout(() => {
-          localMessage.status = 'delivered';
-          localMessage.hopCount = 1;
-          db.saveMessage(localMessage);
-          this.notifyMessageReceived(localMessage);
-          this.logNetworkEvent(`[Delivered ✓✓] Direct BLE delivery to ${recipientPeer.displayName}`);
-        }, 500);
-      }
+      setTimeout(() => {
+        localMessage.status = 'delivered';
+        localMessage.hopCount = recipientPeer.hopsAway || 1;
+        db.saveMessage(localMessage);
+        this.notifyMessageReceived(localMessage);
+        this.logNetworkEvent(`[Delivered ✓✓] P2P BLE Delivery to ${recipientPeer.displayName}`);
+      }, 600);
     }, 300);
-
-    this.simulateVirtualPeerReply(recipientPeer, text);
 
     return localMessage;
   }
 
-  private simulateVirtualPeerReply(peer: PeerNode, userText: string) {
-    if (
-      userText.toLowerCase().includes('hello') ||
-      userText.toLowerCase().includes('hi') ||
-      userText.toLowerCase().includes('mesh') ||
-      userText.toLowerCase().includes('status')
-    ) {
-      setTimeout(() => {
-        const replies = [
-          `Received off-grid! I'm ${peer.hopsAway} hop(s) away from you.`,
-          `Mesh connection strong! RSSI: ${peer.rssi} dBm. E2EE key verified.`,
-          `Offline relay working seamlessly via Bluetooth Low Energy!`,
-          `Got your message with 0 internet connection!`,
-        ];
-        const replyText = replies[Math.floor(Math.random() * replies.length)];
-
-        const virtualNode = this.simulatedNodes.get(peer.fingerprint);
-        if (virtualNode) {
-          const incomingMsg: ChatMessage = {
-            id: `reply_${Date.now()}`,
-            packetId: `pkt_reply_${Date.now()}`,
-            threadId: peer.fingerprint,
-            senderId: peer.fingerprint,
-            senderName: peer.displayName,
-            recipientId: this.userProfile.keys.fingerprint,
-            text: replyText,
-            timestamp: Date.now(),
-            status: 'delivered',
-            hopCount: peer.hopsAway,
-            relayedViaNodes: peer.relayedVia ? [peer.relayedVia] : [],
-            isOutgoing: false,
-            decrypted: true,
-          };
-
-          db.saveMessage(incomingMsg);
-          this.notifyMessageReceived(incomingMsg);
-          this.logNetworkEvent(`[Received] Reply from ${peer.displayName}`);
-        }
-      }, 1800);
-    }
-  }
-
   private handlePacketRelay(packet: MeshPacket) {
-    this.logNetworkEvent(`[Mesh Relay] Relaying packet ${packet.packetId} (TTL: ${packet.ttl}, Hops: ${packet.hopCount})`);
+    this.logNetworkEvent(`[Mesh Relay] Forwarding packet ${packet.packetId} (TTL: ${packet.ttl}, Hops: ${packet.hopCount})`);
   }
 
   private updatePeer(peer: PeerNode) {

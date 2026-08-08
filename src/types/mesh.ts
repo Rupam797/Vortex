@@ -11,6 +11,7 @@ export interface CryptographicKeys {
 export interface UserProfile {
   id: string;               // Local unique user ID (Public Key fingerprint)
   displayName: string;
+  phoneNumber?: string;
   avatarColor: string;
   avatarSymbol: string;
   keys: CryptographicKeys;
@@ -20,6 +21,7 @@ export interface UserProfile {
 export interface PeerNode {
   id: string;               // Endpoint ID or Peer PubKey fingerprint
   displayName: string;
+  phoneNumber?: string;
   avatarColor: string;
   avatarSymbol: string;
   boxPublicKey: string;     // Base64 Curve25519

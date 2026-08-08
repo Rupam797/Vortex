@@ -12,13 +12,22 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "plugins": [
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow MeshChat to access your phone contacts to discover offline mesh contacts."
+        }
+      ]
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.meshchat.app",
       "infoPlist": {
         "NSBluetoothAlwaysUsageDescription": "MeshChat requires Bluetooth access to discover nearby offline peers and relay end-to-end encrypted messages without cellular or internet connectivity.",
         "NSBluetoothPeripheralUsageDescription": "MeshChat uses Bluetooth Low Energy to advertise your local cryptographic mesh identity to nearby offline contacts.",
-        "NSLocalNetworkUsageDescription": "MeshChat uses Apple Multipeer Connectivity to establish zero-latency local Wi-Fi and Bluetooth mesh links with nearby devices."
+        "NSLocalNetworkUsageDescription": "MeshChat uses Apple Multipeer Connectivity to establish zero-latency local Wi-Fi and Bluetooth mesh links with nearby devices.",
+        "NSContactsUsageDescription": "MeshChat reads your phone contacts to display saved contact names for P2P off-grid Bluetooth messaging."
       }
     },
     "android": {
@@ -31,7 +40,9 @@
         "BLUETOOTH_CONNECT",
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
-        "NEARBY_WIFI_DEVICES"
+        "NEARBY_WIFI_DEVICES",
+        "READ_CONTACTS",
+        "WRITE_CONTACTS"
       ]
     }
   }

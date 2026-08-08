@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { UserProfile, PeerNode, ChatMessage, ChatThread } from './types/mesh';
 import { db } from './storage/database';
 import { MeshEngine } from './mesh/MeshEngine';
@@ -10,6 +10,7 @@ import { OnboardingScreen } from './screens/OnboardingScreen';
 import { ChatListScreen } from './screens/ChatListScreen';
 import { ChatRoomScreen } from './screens/ChatRoomScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
+import { requestAndFetchDeviceContacts } from './storage/contactsManager';
 
 export function App() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(() => db.getUserProfile());
@@ -29,8 +30,19 @@ export function App() {
     return new MeshEngine(userProfile);
   }, [userProfile]);
 
+  const refreshPeersAndThreads = useCallback(() => {
+    if (!meshEngine) return;
+    setPeers(meshEngine.getActivePeers());
+    setThreads(db.getChatThreads());
+  }, [meshEngine]);
+
   useEffect(() => {
     if (!meshEngine) return;
+
+    // Auto-fetch device contacts on app start
+    requestAndFetchDeviceContacts().then(() => {
+      refreshPeersAndThreads();
+    });
 
     // Subscribe to Bluetooth Peer updates
     const unsubPeers = meshEngine.subscribePeers((updatedPeers) => {
@@ -50,7 +62,7 @@ export function App() {
       unsubPeers();
       unsubMessages();
     };
-  }, [meshEngine, selectedPeer]);
+  }, [meshEngine, selectedPeer, refreshPeersAndThreads]);
 
   // Load thread messages when selecting a peer chat room
   useEffect(() => {
@@ -83,6 +95,7 @@ export function App() {
     if (!meshEngine) return;
     const newPeer = meshEngine.addVirtualPeer(name);
     setSelectedPeer(newPeer);
+    refreshPeersAndThreads();
   };
 
   const handleUpdatePeerPosition = (fingerprint: string, x: number, y: number, hopsAway: number) => {
@@ -126,6 +139,7 @@ export function App() {
                 activePeers={peers}
                 onSelectThread={handleSelectPeer}
                 onOpenRadar={() => setActiveTab('radar')}
+                onRefreshPeers={refreshPeersAndThreads}
               />
             )}
 
